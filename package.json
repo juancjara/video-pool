@@ -13,6 +13,7 @@
   "dependencies": {
     "react": "^15.0.2",
     "react-dom": "^15.0.2",
+    "react-youtube": "^6.1.0",
     "webpack": "^1.13.0"
   },
   "devDependencies": {

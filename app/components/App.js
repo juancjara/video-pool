@@ -1,73 +1,92 @@
 import React, { Component } from 'react';
-import YouTube from 'react-youtube';
+import Firebase from 'firebase';
 
-const FINISHED = 0;
+import VideoPlayer from './VideoPlayer';
+import VideoList from './VideoList';
+import FixVideoIndex from './FixVideoIndex';
+import SubmitVideo from './SubmitVideo';
 
-const getUrlVideoId = url => url.match(/.*v\=([^\s&]*)/)[1];
+// @TODO
+//eslint preloader
+//chunk load react
+//remove .. using webpack
+//babel: spread, and the other thing, for static types
+//flow maybe
+//redux
+//raw sockets some day
+//users
+//playlists
+//lodash webpack optimization
+
+const videosRef = new Firebase('https://video-pool.firebaseio.com/videos');
+
+// 'https://www.youtube.com/watch?v=mWRsgZuwf_8',
+// 'https://www.youtube.com/watch?v=szj59j0hz_4'
 
 class App extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      currentVideoId: '2g811Eo7K8U',
-      videosUrls: ['https://www.youtube.com/watch?v=mWRsgZuwf_8',
-                   'https://www.youtube.com/watch?v=szj59j0hz_4'],
+      videos: [],
       currentVideoIndex: 0,
     };
-    this.playerState = FINISHED;
-    this._onStateChange = this._onStateChange.bind(this);
+
+    //review this
+    this.incVideoIndex = this.incVideoIndex.bind(this);
+    this.setIndex = this.setIndex.bind(this);
+    this.submit = this.submit.bind(this);
   }
 
   componentDidMount() {
-    console.log('mounted');
+    videosRef.on('child_added', (snapshot) => {
+      console.log(snapshot.val().url);
+      const {
+        videos,
+      } = this.state;
+      videos.push(snapshot.val().url);
+      this.setState({ videos });
+    });
   }
 
-  _nextSong() {
-    const {
-      currentVideoIndex,
-      videosUrls,
-    } = this.state;
-
-    if (currentVideoIndex < videosUrls.length) {
-      this.setState({
-        currentVideoId: getUrlVideoId(videosUrls[currentVideoIndex]),
-        currentVideoIndex: currentVideoIndex + 1,
-      });
-    }
+  submit(url) {
+    videosRef.push({ url });
   }
 
-  _onStateChange(e) {
-    if (FINISHED === e.target.getPlayerState()) {
-      this._nextSong();
-    }
+  incVideoIndex() {
+    this.setState({
+      currentVideoIndex: this.state.currentVideoIndex + 1
+    });
+  }
+
+  setIndex(newIndex) {
+    this.setState({
+      currentVideoIndex: newIndex
+    });
   }
 
   render() {
     const {
-      currentVideoId,
+      currentVideoIndex,
     } = this.state;
-
-    const opts = {
-      height: '390',
-      width: '640',
-      playerVars: {
-        autoplay: 1
-      }
-    };
 
     return (
       <div>
-        {
-          currentVideoId && (
-            <YouTube
-              videoId={currentVideoId}
-              opts={opts}
-              onReady={this._onReady}
-              onStateChange={this._onStateChange}
-            />
-          )
-        }
+        <SubmitVideo
+          submit={this.submit}
+        />
+        <FixVideoIndex
+          setIndex={this.setIndex}
+        />
+        <VideoPlayer
+          videos={this.state.videos}
+          currentVideoIndex={currentVideoIndex}
+          incIndex={this.incVideoIndex}
+        />
+        <VideoList
+          currentVideoIndex={currentVideoIndex}
+          videos={this.state.videos}
+        />
       </div>
     );
   }

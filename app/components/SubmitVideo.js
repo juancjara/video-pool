@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+const videosRef = new Firebase('https://video-pool.firebaseio.com/videos');
+
 class SubmitVideo extends Component {
   constructor(props) {
     super(props);
@@ -13,7 +15,7 @@ class SubmitVideo extends Component {
   }
 
   onClick() {
-    this.props.submit(this.el.value);
+    videosRef.push({ url: this.el.value });
     this.el.value = '';
   }
 

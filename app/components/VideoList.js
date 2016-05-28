@@ -17,7 +17,7 @@ class VideoList extends Component {
       <div>
         <ul>
         {
-          _.map(videos, (url, i) => (
+          _.map(videos, ({ url }, i) => (
             <li
               key={i}
               style={{color: getColor(i, currentVideoIndex)}}

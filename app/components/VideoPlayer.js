@@ -36,7 +36,7 @@ class VideoPlayer extends Component {
         currentVideoIndex < videos.length) {
       this.playerState = PLAYING;
       this.setState({
-        currentVideoId: getUrlVideoId(videos[currentVideoIndex]),
+        currentVideoId: getUrlVideoId(videos[currentVideoIndex].url),
       });
       incIndex();
     }

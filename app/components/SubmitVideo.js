@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 const videosRef = new Firebase('https://video-pool.firebaseio.com/videos');
+let user = null;
 
 class SubmitVideo extends Component {
   constructor(props) {
@@ -8,6 +9,7 @@ class SubmitVideo extends Component {
 
     this.onClick = this.onClick.bind(this);
     this.setRef = this.setRef.bind(this);
+    user = new Date().getTime();
   }
 
   setRef(e) {
@@ -15,8 +17,10 @@ class SubmitVideo extends Component {
   }
 
   onClick() {
-    videosRef.push({ url: this.el.value });
-    this.el.value = '';
+    videosRef.push({ url: this.el.value, user }, () => {
+      alert('added');
+      this.el.value = '';
+    });
   }
 
   render() {

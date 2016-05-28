@@ -5,6 +5,7 @@ import VideoView from './VideoView';
 import SubmitVideo from './SubmitVideo';
 
 // @TODO
+//refactor
 //eslint preloader
 //chunk load react
 //remove .. using webpack
@@ -15,8 +16,6 @@ import SubmitVideo from './SubmitVideo';
 //users
 //playlists
 //lodash webpack optimization
-
-// const videosRef = new Firebase('https://video-pool.firebaseio.com/videos');
 
 // 'https://www.youtube.com/watch?v=mWRsgZuwf_8',
 // 'https://www.youtube.com/watch?v=szj59j0hz_4'
